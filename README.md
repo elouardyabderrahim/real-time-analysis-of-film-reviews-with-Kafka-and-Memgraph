@@ -8,3 +8,4 @@ This project develops a real-time film review analysis system using Kafka for da
 ### contributors :
 
 Abderrrahim ELOUARDY .
+AZEMOUR Amine .
