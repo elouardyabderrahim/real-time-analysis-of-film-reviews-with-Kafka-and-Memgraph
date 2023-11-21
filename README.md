@@ -9,3 +9,4 @@ This project develops a real-time film review analysis system using Kafka for da
 
 Abderrrahim ELOUARDY .
 AZEMOUR Amine .
+EL FAQUIRI AMIN
