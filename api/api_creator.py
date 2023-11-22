@@ -11,27 +11,21 @@ with open('movies_rating.json') as f:
 def get_movies():
     return jsonify(json_data)
 
-@app.route('/api/moviesId', methods=['GET'])
-def get_all_movie_ids():
-    unique_movie_ids = set()
-    for item in json_data:
-        movie_id = item["movie"].get("movieId")
-        if movie_id:
-            unique_movie_ids.add(movie_id)
-    
-    return jsonify(list(unique_movie_ids))
+@app.route('/api/user/<int:user_id>', methods=['GET'])
+def get_user_by_id(user_id):
+    user_movies = [item for item in json_data if item["userId"] == str(user_id)]
+    if user_movies:
+        return jsonify(user_movies)
+    else :
+        abort(404, f'User with ID {user_id} not found')
 
-
-@app.route('/api/usersId', methods=['GET'])
-def get_all_user_ids():
-    unique_user_ids = set()
-    for item in json_data:
-        user_id = item.get("userId")
-        if user_id:
-            unique_user_ids.add(user_id)
-    
-    return jsonify(list(unique_user_ids))
-
+@app.route('/api/movies/<int:movie_id>', methods=['GET'])
+def get_movie_by_id(movie_id):
+    movies = [item for item in json_data if item["movie"]["movieId"] == str(movie_id)]
+    if movies:
+        return jsonify(movies)
+    else:
+        abort(404, f'Movie with ID {movie_id} not found')
 
 if __name__ == '__main__':
     app.run(debug=True)
