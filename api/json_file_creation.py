@@ -1,51 +1,32 @@
 import pandas as pd
-import csv,json
+import json
 
-def change_to_csv_file(Filename,splitter,columns):
+def change_to_df(filpath,splitter,columns) :
 
-    # read lines from file u_data.txt and save in csv file :
-    with open(f'ml-100K/{Filename}.txt', 'r') as file:
-
-        # create csv with column :
-        with open(f'{Filename}.csv', 'w') as csv_file:
-            writer = csv.writer(csv_file)
-            writer.writerow(columns)
-
-        lines = file.readlines()
-        for line in lines:
-            line = line.strip().split(splitter)
-            line = [value.replace(',', '') for value in line if value != '']
-            # print(line)
-            # save to  csv :
-            with open(f'{Filename}.csv', 'a') as csv_file:
-                writer = csv.writer(csv_file)
-                writer.writerow(line)
-
+    df = pd.read_csv(filpath, sep=splitter, header=None, names=columns)
+    return df
 
 user_rating = ['userId', 'movieId', 'rating', 'timestamp']
-movies_review = ["movieId","movie_title","release_date","IMDb_URL","unknown","Action","Adventure","Animation","Children's","Comedy","Crime","Documentary","Drama","Fantasy","Film-Noir","Horror","Musical","Mystery","Romance","Sci-Fi","Thriller","War","Western"]
+movies_review = ["movieId","movie_title","release_date","error","IMDb_URL","unknown","Action","Adventure","Animation","Children's","Comedy","Crime","Documentary","Drama","Fantasy","Film-Noir","Horror","Musical","Mystery","Romance","Sci-Fi","Thriller","War","Western"]
 
-change_to_csv_file('u_data','\t',user_rating)
-change_to_csv_file('u_item','|',movies_review)
-
+user_df = change_to_df('ml-100K/u_data.txt','\t',user_rating)
+item_df = change_to_df('ml-100K/u_item.txt','|',movies_review)
+# drop column :
+item_df = item_df.drop('error', axis=1)
 
 ########################################################################
 #############  Create Structure Json Api And Save'it ##########
 ########################################################################
 
-csv1_df = pd.read_csv('u_data.csv')
-csv2_df = pd.read_csv('u_item.csv')
-
-# Merge data into the desired structure : 
 result = []
-for _, entry in csv1_df.iterrows():
+for _, entry in user_df.iterrows():
     user_id = str(entry['userId'])
     movie_id = str(entry['movieId'])
     rating = str(entry['rating'])
     timestamp = str(entry['timestamp'])
 
-    # Check if movie_id exists in csv2_df
-    movie_data = csv2_df[csv2_df['movieId'] == int(movie_id)]
+    # Check if movie_id exists in item_df
+    movie_data = item_df[item_df['movieId'] == int(movie_id)]
     if not movie_data.empty:
         movie_data = movie_data.iloc[0]
         title = movie_data['movie_title']
@@ -64,6 +45,6 @@ for _, entry in csv1_df.iterrows():
 
         result.append(fishies_entry)
 
-# Save this to a JSON file
+# Save this to a JSON file :
 with open('movies_rating.json', 'w') as f:
     json.dump(result, f)
