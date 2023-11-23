@@ -1,5 +1,4 @@
-from confluent_kafka import Producer, KafkaError
-from neo4j import GraphDatabase
+from confluent_kafka import Producer
 
 # Kafka configuration
 kafka_config = {
@@ -14,7 +13,7 @@ def produce_message(producer, topic, message):
 # Main function
 def main():
     topic = 'demo_topic'
-    message_to_send = 'Hello, Kafka and Memgraph!'
+    message_to_send = 'Hello, Kafka and Memgraph Abdee!'
 
     producer = Producer(kafka_config)
 
