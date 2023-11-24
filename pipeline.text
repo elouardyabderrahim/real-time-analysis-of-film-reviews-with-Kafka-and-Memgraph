@@ -1,0 +1,6 @@
+title Real-Time Analysis of Film Reviews with Kafka and Memgraph
+
+// Define nodes and relationships
+files users [icon: file-text, color : red] --> API Flask [icon: flask, color: green] > Kafka [icon: kafka, color: orange] > Send data to Memgraph [icon: database, color: purple]
+files movies [icon: file-text, color : red] --> API Flask
+Send data to Memgraph > Extract insight and report [icon: bar-chart-2, color: teal]
